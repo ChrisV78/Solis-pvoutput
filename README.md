@@ -16,6 +16,10 @@ I run this script with the Solis S5-GR3P5K inverter.
 - Python 3
 - PIP3
 
+I've modified the Solis WiFi Stick S3-Wifi-ST, solder a wire to pin3(+) and a wire to pin4(-) and connect those to the corresponding +/- on the RS485-USB.
+
+![Pin Layout](/images/pin-layout-wifi-stick.png)
+
 ## Libraries
 Use `pip3 install`
 - minimalmodbus
@@ -23,7 +27,6 @@ Use `pip3 install`
 
 
 ## Cron
-
 Add a line to your crontab to run the script every five minutes:
 
 `*/5 6-22 * * * cd /path/to/directory && /usr/bin/python3 ./pvoutput.py`

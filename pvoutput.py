@@ -2,7 +2,6 @@
 
 import time
 import requests
-import random
 import serial
 import minimalmodbus
 from datetime import datetime
