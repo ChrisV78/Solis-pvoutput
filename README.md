@@ -4,6 +4,7 @@ Solis modbus rs485 to pvoutput
 Reading the inverter and uploading to pvoutput is based on https://github.com/bram2202/Ginlong-Solis-mqtt
 
 Changes:
+- Removd mqtt
 - Added logging that rotates logfiles for a week
 - Moved secrets to .env file
 - Run as cronjob and not with python scheduler
