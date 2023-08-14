@@ -38,7 +38,7 @@ instrument.serial.timeout = 3
 
 # Read values from invertor with RS485
 def getValues():
-    global Realtime_ACW, Realtime_DCV, Realtime_DCI, Realtime_ACV, Realtime_ACI, Realtime_ACF, Inverter_C, Alltime_KWH, Today_KWH, LastMeasurement
+    global Realtime_ACW, Realtime_DCV, Realtime_DCI, Realtime_ACV1,Realtime_ACV2,Realtime_ACV3, Voltage, Realtime_ACI, Realtime_ACF, Inverter_C, Alltime_KWH, Today_KWH, LastMeasurement
     # AC Watts
     Realtime_ACW = instrument.read_long(3004, functioncode=4, signed=False)
     # DC volts
@@ -46,7 +46,10 @@ def getValues():
     # DC current
     Realtime_DCI = instrument.read_register(3022, functioncode=4, signed=False) / 10
     # AC volts
-    Realtime_ACV = instrument.read_register(3035, functioncode=4, signed=False) / 10
+    Realtime_ACV1 = instrument.read_register(3033, functioncode=4, signed=False) / 10
+    Realtime_ACV2 = instrument.read_register(3034, functioncode=4, signed=False) / 10
+    Realtime_ACV3 = instrument.read_register(3035, functioncode=4, signed=False) / 10
+    Voltage=(Realtime_ACV1+Realtime_ACV2+Realtime_ACV3)/3
     # AC current
     Realtime_ACI = instrument.read_register(3038, functioncode=4, signed=False) / 10
     # AC frequency
@@ -65,20 +68,12 @@ def printValues():
     print("AC Watts: " + str(Realtime_ACW) + " W")
     print("DC Volt: " + str(Realtime_DCV) + " V")
     print("DC Current: " + str(Realtime_DCI) + " A")
-    print("AC volt: " + str(Realtime_ACV) + " V")
+    print("AC volt: " + str(round(Voltage,2)) + " V")
     print("AC Current: " + str(Realtime_ACI) + " A")
     print("AC Frequency: " + str(Realtime_ACF) + " Hz")
     print("Inverter temperature: " + str(Inverter_C) + " C")
     print("Generated all time: " + str(Alltime_KWH) + " kWh")
     print("Generated today: " + str(Today_KWH) + " kWh")
-
-# Send 0 AC watt
-def sendNul(client):
-    client.loop_start()
-    client.publish("pv/ac", '{"W":"0"}', qos=0, retain=False)
-    client.disconnect()
-    client.loop_stop()
-
 
 # Send measurements to PV output
 def sendPvOutput():
@@ -117,7 +112,7 @@ def sendPvOutput():
             "v1": str(Today_KWH * 1000),
             "v2": str(Realtime_ACW),
             "v5": str(Inverter_C),
-            "v6": str(Realtime_DCV)
+            "v6": str(Voltage)
         }
 
         # Post status
